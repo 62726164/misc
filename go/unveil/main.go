@@ -9,10 +9,10 @@ import (
 	"os"
 )
 
-// simple program that demonstrates how unveil work in Go on OpenBSD systems.
+// simple program that demonstrates how unveil works in Go on OpenBSD systems.
 func main() {
 	var help = flag.Bool("help", false, "unveil-example -f /path/to/file.txt")
-	var file = flag.String("f", "", "the file to read")
+	var file = flag.String("f", "", "the file path to read")
 
 	flag.Parse()
 	if *help || len(os.Args) == 1 {
@@ -20,7 +20,7 @@ func main() {
 		return
 	}
 
-	// allow program to read files in /home/user/tmp
+	// allow the program to read files in /home/user/tmp
 	// these files must be present *before* the program runs
 	err := unix.Unveil("/home/user/tmp/", "r")
 	if err != nil {
