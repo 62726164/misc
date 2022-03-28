@@ -22,6 +22,7 @@ func main() {
 
 	// allow the program to read files in /home/user/tmp
 	// these files must be present *before* the program runs
+	// permissions may be r, w, x or c *or* any combination
 	err := unix.Unveil("/home/user/tmp/", "r")
 	if err != nil {
 		log.Fatal(err)
@@ -33,7 +34,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// attempt to read the file
+	// attempt to read a file
 	bytes, err := ioutil.ReadFile(*file)
 	if err != nil {
 		log.Fatal(err)
