@@ -1,0 +1,5 @@
+xterm*background: black
+xterm*foreground: lightgray
+xterm*faceName: Ubuntu Mono
+xterm*faceSize: 14
+xterm*selectToClipboard: true
