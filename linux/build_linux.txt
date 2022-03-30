@@ -1,0 +1,9 @@
+# Build vanilla kernel on Debian 11
+
+1. git clone https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/
+2. cd linux
+3. git pull && git checkout v5.17.1
+4. use config in this repo as .config
+5. make olddefconfig
+6. make -j `nproc` deb-pkg
+7. dpkg -i headers.deb image.deb
