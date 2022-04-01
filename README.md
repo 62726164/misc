@@ -19,7 +19,7 @@ If you would like for me to ssh into a server, please use this key.
 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFeFMqS9nFmculzZqA/eje3lHkJPbIol4A5C3oepjXtR
 ```
 
-## My Public GPG key
+## My Public PGP key
 
 ```
 -----BEGIN PGP PUBLIC KEY BLOCK-----
