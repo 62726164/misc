@@ -7,3 +7,25 @@
 5. make olddefconfig
 6. make -j `nproc` deb-pkg
 7. dpkg -i headers.deb image.deb
+
+Nvidia Drivers on Debian 11
+
+$ nvidia-detect
+
+Download latest drivers from: https://www.nvidia.com/en-us/drivers/unix/
+
+$ vim /etc/modprobe.d/blacklist-nouveau.conf (add these two lines)
+blacklist nouveau
+options nouveau modeset=0
+
+# update-initramfs -u
+
+# systemctl set-default multi-user.target
+
+# reboot
+
+# bash NVIDIA-Linux-x86_64-390.144.run
+
+# systemctl set-default graphical.target
+
+# reboot
