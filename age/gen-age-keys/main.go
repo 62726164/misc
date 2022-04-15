@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"filippo.io/age"
+	"filippo.io/age/armor"
 )
 
 // genKey - This is equivalent to age-keygen from the cli
@@ -35,7 +36,9 @@ func pwEncrypt(password string) {
 	}
 	defer f.Close()
 
-	w, err := age.Encrypt(f, nsr)
+	aw := armor.NewWriter(f)
+
+	w, err := age.Encrypt(aw, nsr)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -46,6 +49,10 @@ func pwEncrypt(password string) {
 
 	if err := w.Close(); err != nil {
 		log.Fatal(err)
+	}
+
+	if err := aw.Close(); err != nil {
+		log.Fatalf("Failed to close armor: %v", err)
 	}
 }
 
