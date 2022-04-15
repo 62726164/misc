@@ -29,13 +29,40 @@ func pwEncrypt(password string) {
 		log.Fatal(err)
 	}
 
-	f, err := os.Create("enc.age")
+	f, err := os.Create("penc.age")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer f.Close()
 
 	w, err := age.Encrypt(f, nsr)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if _, err := io.WriteString(w, "The plain text.\n"); err != nil {
+		log.Fatal(err)
+	}
+
+	if err := w.Close(); err != nil {
+		log.Fatal(err)
+	}
+}
+
+// keyEncrypt - Encrypt with a key.
+func keyEncrypt(pubkey string) {
+	nxr, err := age.ParseX25519Recipient(pubkey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	f, err := os.Create("kenc.age")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+
+	w, err := age.Encrypt(f, nxr)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -57,4 +84,5 @@ func main() {
 	}
 
 	pwEncrypt("howdy there partner")
+	keyEncrypt("age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
 }
