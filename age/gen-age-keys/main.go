@@ -113,7 +113,7 @@ func fileEncrypt(filename, pubkey string) {
 	buf := make([]byte, 4096)
 
 	for {
-		_, err := in.Read(buf)
+		read, err := in.Read(buf)
 		if err != nil {
 			if err != io.EOF {
 				log.Fatal(err)
@@ -121,7 +121,7 @@ func fileEncrypt(filename, pubkey string) {
 			break
 		}
 
-		if _, err := io.WriteString(w, string(buf)); err != nil {
+		if _, err := io.WriteString(w, string(buf[:read])); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -140,5 +140,5 @@ func main() {
 
 	pwEncrypt("howdy there partner")
 	keyEncrypt("age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
-	fileEncrypt("main.go", "age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
+	fileEncrypt("test.bin", "age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
 }
