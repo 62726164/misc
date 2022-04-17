@@ -11,6 +11,7 @@ windows:
 clean:
 	rm -f $(PROGRAM)
 	rm -f $(PROGRAM).exe
+	rm -f *.age
 
 fmt:
 	gofmt -w $(SOURCE)

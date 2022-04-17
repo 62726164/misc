@@ -85,7 +85,7 @@ func keyEncrypt(filename, plaintext, pubkey string) {
 }
 
 // fileEncrypt - Encrypt a file
-func fileEncrypt(filename, pubkey string) {
+func fileEncrypt(plainFile, pubkey string) {
 	// The recipient
 	nxr, err := age.ParseX25519Recipient(pubkey)
 	if err != nil {
@@ -93,14 +93,14 @@ func fileEncrypt(filename, pubkey string) {
 	}
 
 	// The file to encrypt
-	in, err := os.Open(filename)
+	in, err := os.Open(plainFile)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer in.Close()
 
 	// The encrypted file
-	out, err := os.Create(filename + ".age")
+	out, err := os.Create(plainFile + ".age")
 	if err != nil {
 		log.Fatal(err)
 	}
