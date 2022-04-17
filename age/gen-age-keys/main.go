@@ -24,26 +24,26 @@ func genKey(user string) {
 }
 
 // pwEncrypt - Encrypt string with a password.
-func pwEncrypt(filename, password string) {
+func pwEncrypt(filename, plaintext, password string) {
 	nsr, err := age.NewScryptRecipient(password)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	f, err := os.Create(filename)
+	out, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer f.Close()
+	defer out.Close()
 
-	aw := armor.NewWriter(f)
+	aw := armor.NewWriter(out)
 
 	ae, err := age.Encrypt(aw, nsr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if _, err := io.WriteString(ae, "The plain text.\n"); err != nil {
+	if _, err := io.WriteString(ae, plaintext); err != nil {
 		log.Fatal(err)
 	}
 
@@ -57,24 +57,24 @@ func pwEncrypt(filename, password string) {
 }
 
 // keyEncrypt - Encrypt string with a key.
-func keyEncrypt(filename, pubkey string) {
+func keyEncrypt(filename, plaintext, pubkey string) {
 	nxr, err := age.ParseX25519Recipient(pubkey)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	f, err := os.Create(filename)
+	out, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer f.Close()
+	defer out.Close()
 
-	ae, err := age.Encrypt(f, nxr)
+	ae, err := age.Encrypt(out, nxr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if _, err := io.WriteString(ae, "The plain text.\n"); err != nil {
+	if _, err := io.WriteString(ae, plaintext); err != nil {
 		log.Fatal(err)
 	}
 
@@ -132,13 +132,15 @@ func fileEncrypt(filename, pubkey string) {
 }
 
 func main() {
+	// Generate keys
 	users := []string{"one", "two", "three"}
 
 	for _, user := range users {
 		genKey(user)
 	}
 
-	pwEncrypt("password-encrypted.txt.age", "howdy there partner")
-	keyEncrypt("key-encrypted.txt.age", "age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
+	// Encrypt
+	pwEncrypt("password-encrypted.txt.age", "the plain text", "howdy there partner")
+	keyEncrypt("key-encrypted.txt.age", "the plain text", "age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
 	fileEncrypt("test.bin", "age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
 }
