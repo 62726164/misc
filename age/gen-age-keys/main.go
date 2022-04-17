@@ -25,13 +25,13 @@ func genKey(user string) {
 }
 
 // pwEncrypt - Encrypt string with a password.
-func pwEncrypt(filename, plaintext, password string) {
+func pwEncrypt(outFile, plaintext, password string) {
 	nsr, err := age.NewScryptRecipient(password)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	out, err := os.Create(filename)
+	out, err := os.Create(outFile)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -58,13 +58,13 @@ func pwEncrypt(filename, plaintext, password string) {
 }
 
 // keyEncrypt - Encrypt string with a key.
-func keyEncrypt(filename, plaintext, pubkey string) {
+func keyEncrypt(outFile, plaintext, pubkey string) {
 	nxr, err := age.ParseX25519Recipient(pubkey)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	out, err := os.Create(filename)
+	out, err := os.Create(outFile)
 	if err != nil {
 		log.Fatal(err)
 	}
