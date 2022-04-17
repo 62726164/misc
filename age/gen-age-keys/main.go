@@ -24,13 +24,13 @@ func genKey(user string) {
 }
 
 // pwEncrypt - Encrypt string with a password.
-func pwEncrypt(password string) {
+func pwEncrypt(filename, password string) {
 	nsr, err := age.NewScryptRecipient(password)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	f, err := os.Create("penc.age")
+	f, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -38,47 +38,47 @@ func pwEncrypt(password string) {
 
 	aw := armor.NewWriter(f)
 
-	w, err := age.Encrypt(aw, nsr)
+	ae, err := age.Encrypt(aw, nsr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if _, err := io.WriteString(w, "The plain text.\n"); err != nil {
+	if _, err := io.WriteString(ae, "The plain text.\n"); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := w.Close(); err != nil {
+	if err := ae.Close(); err != nil {
 		log.Fatal(err)
 	}
 
 	if err := aw.Close(); err != nil {
-		log.Fatalf("Failed to close armor: %v", err)
+		log.Fatal(err)
 	}
 }
 
 // keyEncrypt - Encrypt string with a key.
-func keyEncrypt(pubkey string) {
+func keyEncrypt(filename, pubkey string) {
 	nxr, err := age.ParseX25519Recipient(pubkey)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	f, err := os.Create("kenc.age")
+	f, err := os.Create(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer f.Close()
 
-	w, err := age.Encrypt(f, nxr)
+	ae, err := age.Encrypt(f, nxr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if _, err := io.WriteString(w, "The plain text.\n"); err != nil {
+	if _, err := io.WriteString(ae, "The plain text.\n"); err != nil {
 		log.Fatal(err)
 	}
 
-	if err := w.Close(); err != nil {
+	if err := ae.Close(); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -105,7 +105,7 @@ func fileEncrypt(filename, pubkey string) {
 	}
 	defer out.Close()
 
-	w, err := age.Encrypt(out, nxr)
+	ae, err := age.Encrypt(out, nxr)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -121,12 +121,12 @@ func fileEncrypt(filename, pubkey string) {
 			break
 		}
 
-		if _, err := io.WriteString(w, string(buf[:read])); err != nil {
+		if _, err := io.WriteString(ae, string(buf[:read])); err != nil {
 			log.Fatal(err)
 		}
 	}
 
-	if err := w.Close(); err != nil {
+	if err := ae.Close(); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -138,7 +138,7 @@ func main() {
 		genKey(user)
 	}
 
-	pwEncrypt("howdy there partner")
-	keyEncrypt("age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
+	pwEncrypt("password-encrypted.txt.age", "howdy there partner")
+	keyEncrypt("key-encrypted.txt.age", "age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
 	fileEncrypt("test.bin", "age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
 }
