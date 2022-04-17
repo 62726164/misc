@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"log"
@@ -131,6 +132,30 @@ func fileEncrypt(filename, pubkey string) {
 	}
 }
 
+// fileDecrypt - Decrypt a file
+func fileDecrypt(encryptedFile, privateKey string) {
+	identity, err := age.ParseX25519Identity(privateKey)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	f, err := os.Open(encryptedFile)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	r, err := age.Decrypt(f, identity)
+	if err != nil {
+		log.Fatal(err)
+	}
+	out := &bytes.Buffer{}
+	if _, err := io.Copy(out, r); err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("File contents: %q\n", out.Bytes())
+}
+
 func main() {
 	// Generate keys
 	users := []string{"one", "two", "three"}
@@ -141,6 +166,7 @@ func main() {
 
 	// Encrypt
 	pwEncrypt("password-encrypted.txt.age", "the plain text", "howdy there partner")
-	keyEncrypt("key-encrypted.txt.age", "the plain text", "age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
-	fileEncrypt("test.bin", "age1x6xa2agttdw2ejldtun9fgx2xwlen45h96uc8ef2g6avtggdc3gqrzywl2")
+	keyEncrypt("key-encrypted.txt.age", "the plain text", "age1cyt32ssf3g3vkurgmdph378xf2acsrxwldm0n5z9rp7sey4haessk7p7s5")
+	fileEncrypt("plain.txt", "age1cyt32ssf3g3vkurgmdph378xf2acsrxwldm0n5z9rp7sey4haessk7p7s5")
+	fileDecrypt("plain.txt.age", "AGE-SECRET-KEY-1X7CEHEPFW24PFE3CVA6NAPV2EPCW6XT4EDLFSXFQFUPPRL9DZ2ZSWZNG4U")
 }
