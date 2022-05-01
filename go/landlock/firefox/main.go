@@ -5,27 +5,31 @@ package main
 // Requires Linux kernel 5.13 or later.
 
 import (
+	"fmt"
 	"github.com/landlock-lsm/go-landlock/landlock"
 	"log"
+	"os"
 	"os/exec"
 )
 
 func main() {
+	home, _ := os.UserHomeDir()
+
 	err := landlock.V1.RestrictPaths(
 		landlock.RWFiles("/dev/null"),
-		landlock.RWDirs("/home/user/.cache/mozilla/firefox",
-			"/home/user/.mozilla",
-			"/home/user/Downloads",
+		landlock.RWDirs(fmt.Sprintf("%s/.cache/mozilla/firefox", home),
+			fmt.Sprintf("%s/.mozilla", home),
+			fmt.Sprintf("%s/Downloads", home),
 			"/tmp",
 			"/proc"),
-		landlock.ROFiles("/home/user/.config/mimeapps.list"),
+		landlock.ROFiles(fmt.Sprintf("%s/.config/mimeapps.list", home)),
 		landlock.RODirs("/dev",
 			"/etc",
-			"/home/user/.config/dconf",
-			"/home/user/.config/ibus",
-			"/home/user/.config/gtk-3.0",
-			"/home/user/.local",
-			"/home/user/.pki",
+			fmt.Sprintf("%s/.config/dconf", home),
+			fmt.Sprintf("%s/.config/ibus", home),
+			fmt.Sprintf("%s/.config/gtk-3.0", home),
+			fmt.Sprintf("%s/.local", home),
+			fmt.Sprintf("%s/.pki", home),
 			"/lib",
 			"/run",
 			"/sys",
