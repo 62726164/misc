@@ -2,7 +2,9 @@ package main
 
 // Wrap firefox with landlock.
 // More restrictive than firejail and no SUID.
-// Requires Linux kernel 5.13 or later.
+// Requires Linux kernel 5.13 or later and .config should look something like this:
+// CONFIG_SECURITY_LANDLOCK=y
+// CONFIG_LSM="landlock,lockdown,yama,loadpin,safesetid,integrity,apparmor,selinux,smack,tomoyo"
 
 import (
 	"fmt"
