@@ -19,9 +19,9 @@ func main() {
 		landlock.RWFiles("/dev/null"),
 		landlock.RWDirs(fmt.Sprintf("%s/.cache/mozilla/firefox", home),
 			fmt.Sprintf("%s/.mozilla", home),
-			fmt.Sprintf("%s/Downloads", home),
-			"/tmp",
-			"/proc"),
+			fmt.Sprintf("%s/Downloads/firefox", home),
+			"/proc",
+			"/tmp"),
 		landlock.ROFiles(fmt.Sprintf("%s/.config/mimeapps.list", home)),
 		landlock.RODirs("/dev",
 			"/etc",
@@ -34,7 +34,7 @@ func main() {
 			"/run",
 			"/sys",
 			"/usr",
-			"/var"))
+			"/var/cache/fontconfig/"))
 
 	if err != nil {
 		log.Fatal(err)
